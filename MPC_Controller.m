@@ -252,7 +252,7 @@ function sys=mdlOutputs(t,x,u)
   kesi = zeros(Nx+Nu,1);
   kesi(1) = u(1)-r(1);%u(1)==X(1)
   kesi(2) = u(2)-r(2);%u(2)==X(2)
-  kesi(3) = u(3)-r(3);%u(3)==X(3)
+  kesi(3) = u(3)*pi/180-r(3);%u(3)==X(3)
   kesi(4) = U(1);
   kesi(5) = U(2);
   fprintf('Update start, u(1)=%4.2f\n',U(1))
@@ -310,9 +310,9 @@ function sys=mdlOutputs(t,x,u)
 %  f = (cell2mat(f_cell))';
   f = cell2mat(f_cell);
   
- %%ÒÔÏÂÎªÔ¼ÊøÉú³ÉÇøÓò
- %²»µÈÊ½Ô¼Êø
-  A_t = zeros(Nc,Nc); %¼ûfalconeÂÛÎÄP181
+ %%ä»¥ä¸‹ä¸ºçº¦æŸç”ŸæˆåŒºåŸŸ
+ %ä¸ç­‰å¼çº¦æŸ
+  A_t = zeros(Nc,Nc); %è§falconeè®ºæ–‡P181
   for p = 1:1:Nc
       for q = 1:1:Nc
           if q<=p
@@ -334,18 +334,18 @@ function sys=mdlOutputs(t,x,u)
   b_cons_cell = {Umax-Ut; -Umin+Ut};
   A_cons = cell2mat(A_cons_cell);
   b_cons = cell2mat(b_cons_cell);
- % ×´Ì¬Á¿Ô¼Êø
+ % çŠ¶æ€é‡çº¦æŸ
   M = 10;
   delta_Umin = kron(ones(Nc,1), delta_umin);
   delta_Umax = kron(ones(Nc,1), delta_umax);
   lb = [delta_Umin; 0];
   ub = [delta_Umax; M];
   
- %%¿ªÊ¼Çó½â¹ı³Ì
+ %%å¼€å§‹æ±‚è§£è¿‡ç¨‹
  % options = optimset('Algorithm','active-set');
  options = optimset('Algorithm','interior-point-convex');
  [X, fval, exitflag] = quadprog(H,f,A_cons,b_cons,[],[],lb,ub,[],options);
-%%¼ÆËãÊä³ö
+%%è®¡ç®—è¾“å‡º
  u_piao(1) = X(1);
  u_piao(2) = X(2);
  U(1) = kesi(4)+u_piao(1);
